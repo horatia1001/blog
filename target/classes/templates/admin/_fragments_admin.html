@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">   <!--页面适配移动端大小-->
+    <title th:replace="${title}">博客</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <link rel="stylesheet" href="../../static/css/me.css" th:src="@{/css/me.css}">
+    <link rel="stylesheet" href="../../static/css/typo.css" th:src="@{/css/typo.css}">
+    <link rel="stylesheet" href="../../static/lib/prism/prism.css" th:src="@{/lib/prism/prism.css}">
+    <link rel="stylesheet" href="../../static/lib/tocbot/tocbot.css" th:src="@{/lib/tocbot/tocbot.css}">
+    <link rel="stylesheet" href="../../static/lib/editmd/css/editormd.min.css">
+</head>
+<body>
+    <!--  导航  ui:组件-->
+    <nav th:fragment="menuone(n)" class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
+        <div class="ui container">
+            <div class="ui inverted secondary stackable menu">        <!--inverted(反差色) secondary(menu样式变化) menu(菜单)-->
+                <h2 class="ui teal header item">管理后台</h2>       <!--teal青绿色 header标题 item标题里的小项-->
+                <a href="#" class="m-menu-item item m-mobile-hide" th:classappend="${n==1} ? 'active'"><i class="home icon "></i>博客</a>
+                <a href="#" class="m-menu-item item m-mobile-hide" th:classappend="${n==2} ? 'active'"><i class="sitemap icon"></i>分类</a>
+                <a href="#" class="m-menu-item item m-mobile-hide" th:classappend="${n==3} ? 'active'"><i class="tags icon"></i>标签</a>
+                <div class="right m-item m-mobile-hide menu">
+                    <div class="ui dropdown  item">
+                        <div class="text">
+                            <img class="ui big avatar image" src="../../static/images/avatar_matt.jpg">
+                            洪婷
+                        </div>
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                            <a class="item" th:href="@{/admin/logout}">注销</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 二级导航 -->
+    <div th:fragment="menutwo(n)" class="ui attached pointing menu">
+        <div class="ui container">
+            <a href="#" class="item" th:classappend="${n==1} ? 'teal active'">发布</a>
+            <a href="#" class="item" th:classappend="${n==2} ? 'teal active'">列表</a>
+        </div>
+    </div>
+
+    <!--  底部     -->
+    <footer th:fragment="footer" class="ui inverted vertical segment m-padded-tb-massive">
+        <div class="ui center aligned container m-text-spaced">   <!--center aligned容器中的元素居中-->
+            <div class="ui inverted divided stackable grid">
+                <div class="three wide column">
+                    <div class="ui inverted link list">
+                        <a href="#" class="item" >
+                            <img src="../../static/images/wechat.png" th:src="@{/static/images/wechat.png}"  class="ui rounded image" alt="" style="width: 120px">
+                        </a>
+                    </div>
+                </div>
+                <div class="three wide column">
+                    <h4 class="ui inverted header ">最新博客</h4>
+                    <div class="ui inverted link list m-text-thin m-opacity">
+                        <a href="#" class="item" >1</a>
+                        <a href="#" class="item" >2</a>
+                        <a href="#" class="item" >3</a>
+                    </div>
+                </div>
+                <div class="four wide column ">
+                    <h4 class="ui inverted header ">联系方式</h4>
+                    <div class="ui inverted link list m-text-thin m-opacity">
+                        <a href="#" class="item" >邮箱:hongting000@outlook.com</a>
+                        <a href="#" class="item" >QQ:947190513</a>
+                    </div>
+                </div>
+                <div class="six wide column ">
+                    <h4 class="ui inverted header ">关于博客</h4>
+                    <div class="ui inverted link list m-text-thin m-opacity-small">
+                        <p>这是我的个人博客，会分享关于编程、写作、思考相关的任何内容。</p>
+                    </div>
+                </div>
+
+            </div>
+            <div class="ui inverted section divider "></div>
+            <p class="m-opacity-small">Copyright © 2021 ht All rights Reserved.</p>
+        </div>
+    </footer>
+
+</body>
+
+
+</html>

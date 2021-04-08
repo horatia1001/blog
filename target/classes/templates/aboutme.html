@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="_fragments :: head(~{::title})">
+    <title>关于我</title>
+</head>
+<body>
+    <!--  导航  ui:组件-->
+    <nav th:replace="_fragments :: menu(5)"></nav>
+
+
+    <!--  中间  -->
+    <div class="m-padded-tb-huge">
+        <div class="ui container">   <!--用container来包裹元素，可以让屏幕自适应调整到适合大小-->
+            <div class="ui stackable grid">
+                <!-- 左边部分 -->
+                <div class="ten wide column">
+                    <!-- 放一张图片 -->
+                    <div class="ui attached segment">
+                        <img src="../static/images/blogimg.png" class="ui rounded image">
+                    </div>
+                </div>
+
+                <!-- 右边部分 -->
+                <div class="six wide column">
+                    <!-- 我的个人信息 -->
+                    <div class="ui top attached secondary segment ">
+                        <div class="ui middle aligned two column grid">
+                            <div class="column">
+                                <h3 class="ui header">关于我</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 个人介绍 -->
+                    <div class="ui attached segment m-text">
+                        <p>一名在校大学生，热爱编程，喜欢折腾。为了找实习正在努力学习...</p>
+                    </div>
+                    <!-- 爱好 -->
+                    <div class="ui attached segment">
+                        <div class="ui orange basic label">编程</div>
+                        <div class="ui orange basic label">运动</div>
+                    </div>
+                    <!-- 技能 -->
+                    <div class="ui attached segment">
+                        <a href="#" target="_blank" class="ui teal basic label m-margin-tb-tiny">Java</a>
+                        <a href="#" target="_blank" class="ui teal basic label m-margin-tb-tiny">Python</a>
+                        <a href="#" target="_blank" class="ui teal basic label m-margin-tb-tiny">Hadoop</a>
+                        <a href="#" target="_blank" class="ui teal basic label m-margin-tb-tiny">Spark</a>
+                        <a href="#" target="_blank" class="ui teal basic label m-margin-tb-tiny">MySQL</a>
+                        <a href="#" target="_blank" class="ui teal basic label m-margin-tb-tiny">大数据开发</a>
+                        <a href="#" target="_blank" class="ui teal basic label m-margin-tb-tiny">后端开发</a>
+                    </div>
+                    <!-- 其它社交账号链接 -->
+                    <div class="ui segment">
+                        <a href="https://github.com/horatia1001" class="ui circular icon button"><i class="github icon"></i></a>
+                        <a href="#" id="showWeChatQRBtn" class="ui wechat circular icon button"><i class="wechat icon"></i></a>
+                    </div>
+                    <!-- 二维码 -->
+                    <div class="ui showWeChatQR flowing popup transition hidden">
+                        <div class="image">
+                            <img src="../static/images/wechat.png" alt="" class="ui rounded image" style="width: 120px">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+
+    <!--  底部     -->
+    <footer th:replace="_fragments :: footer" ></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+
+    <script>
+        // 设置右上角按钮响应：显示菜单
+        $('.menu.toggle').click(function (){
+            $('.m-menu-item').toggleClass('m-mobile-hide');
+        });
+        // 显示微信按钮
+        $('#showWeChatQRBtn').popup({
+            popup : $('.showWeChatQR.popup'),
+            on : 'click',
+            position : 'bottom center'
+        });
+    </script>
+</body>
+</html>

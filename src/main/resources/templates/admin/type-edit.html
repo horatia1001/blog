@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en" >
+<head th:replace="admin/_fragments_admin :: head(~{::title})">
+    <title>编辑博客分类</title>
+</head>
+<body>
+    <!--  导航  ui:组件-->
+    <nav th:replace="admin/_fragments_admin :: menuone(2)"></nav>
+
+    <!-- 二级导航 -->
+    <!--<div th:replace="admin/_fragments_admin :: menutwo(0)"></div>-->
+
+    <br>
+    <br>
+    <br>
+    <!-- 编辑博客分类  -->
+    <div class="m-padded-tb-huge">
+        <div class="ui container">
+            <form action="#" method="post" class="ui form" >
+                <!-- 博客分类输入框 -->
+                <div class="field">
+                    <input type="text" name="name" placeholder="请输入分类名称...">
+                </div>
+
+                <!-- 显示error提示信息：它会自己找提示信息 -->
+                <div class="ui error message"></div>
+                <!-- 按钮 -->
+                <div class="ui right aligned container">
+                    <button type="button" class="ui button" onclick="window.history.go(-1)">返回</button>
+                    <button type="submit" class="ui teal button">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <!--  底部     -->
+    <footer th:replace="admin/_fragments_admin :: footer" ></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <script>
+
+        $('.ui.dropdown').dropdown({
+            on : 'hover'
+        });
+
+        $('.menu.toggle').click(function () {
+            $('.m-item').toggleClass('m-mobile-hide');
+        });
+
+        // 限制表单输入格式
+        $('.ui.form').form({
+            fields : {
+                'name' : {
+                    identifier: 'name',
+                    rules: [{
+                        type: 'empty', prompt : '分类名称不能为空'
+                    }]
+                }
+
+            }
+        });
+
+    </script>
+
+</body>
+</html>

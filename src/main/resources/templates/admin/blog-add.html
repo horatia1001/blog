@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en" >
+<head th:replace="admin/_fragments_admin :: head(~{::title})">
+    <title>写博客</title>
+</head>
+<body>
+    <!--  导航  ui:组件-->
+    <nav th:replace="admin/_fragments_admin :: menuone(1)"></nav>
+
+    <!-- 二级导航 -->
+    <div th:replace="admin/_fragments_admin :: menutwo(1)"></div>
+
+    <!-- 博客编写  -->
+    <div class="m-padded-tb-huge">
+        <div class="ui container">
+            <form action="#" method="post" class="ui form">
+                <!-- 选择博客类型：原创、转载、翻译 -->
+                <div class="required field">
+                    <div class="ui left labeled input">
+                        <div class="ui selection compact dropdown label">  <!--compact适应文本宽度-->
+                            <input type="hidden" value="原创">
+                            <i class="dropdown icon"></i>
+                            <div class="text">原创</div>
+                            <div class="menu">
+                                <div class="item" data-value="原创">原创</div>
+                                <div class="item" data-value="转载">转载</div>
+                                <div class="item" data-value="翻译">翻译</div>
+                            </div>
+                        </div>
+                        <input type="text" name="title" placeholder="标题">
+                    </div>
+                </div>
+                <!-- 博客内容 -->
+                <div class="required field">
+                    <div id="blog-content" style="z-index: 10 !important;">  <!--z-index设置叠放层次-->
+                        <textarea name="blog-content" placeholder="在这里输入博客正文..." style="display: none">
+                        [TOC]</textarea>
+                    </div>
+                </div>
+                <div class="two fields">
+                    <!-- 选择分类 -->
+                    <div class="required field">
+                        <div class="ui left labeled input">
+                            <div class="ui fluid selection dropdown">
+                                <input type="hidden" name="selectType">
+                                <i class="dropdown icon"></i>
+                                <div class=" text">分类</div>
+                                <div class="menu">
+                                    <div class="item">数据结构与算法</div>
+                                    <div class="item">操作系统</div>
+                                    <div class="item">计算机网络</div>
+                                    <div class="item">计算机组成原理</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 选择标签 -->
+                    <div class="required field">
+                        <div class="ui left labeled input">
+                            <div class="ui fluid multiple search selection dropdown">
+                                <input type="hidden" name="selectTag">
+                                <i class="dropdown icon"></i>
+                                <div class="text">标签</div>
+                                <div class="menu">
+                                    <div class="item">Java</div>
+                                    <div class="item">Python</div>
+                                    <div class="item">大数据</div>
+                                    <div class="item">分布式</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 首图引用地址 -->
+                <div class="field">
+                    <input type="text" name="firstPicture" placeholder="请输入博客封面引用地址">
+                </div>
+                <!-- 4个选项 -->
+                <div class="inline fields">
+                    <div class="field">
+                        <div class="ui checkbox">
+                            <input type="checkbox" id="recommend" name="recommend" class="hidden">
+                            <label for="recommend">推荐此博客</label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui checkbox">
+                            <input type="checkbox" id="shareInfo" name="shareInfo" class="hidden">
+                            <label for="shareInfo">显示转载信息</label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui checkbox">
+                            <input type="checkbox" id="appreciation" name="appreciation" class="hidden" checked="">
+                            <label for="appreciation">开启赞赏功能</label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui checkbox">
+                            <input type="checkbox" id="comment" name="comment" class="hidden" checked="">
+                            <label for="comment">开启评论功能</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- 显示error提示信息：它会自己找提示信息 -->
+                <div class="ui error message"></div>
+                <!-- 按钮 -->
+                <div class="ui right aligned container">
+                    <button type="button" class="ui button" onclick="window.history.go(-1)">返回</button>
+                    <button class="ui secondary button">保存</button>
+                    <button type="submit" class="ui teal button">发布</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br>
+    <br>
+
+    <!--  底部     -->
+    <footer th:replace="admin/_fragments_admin :: footer" ></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <script src="../../static/lib/editmd/editormd.min.js"></script>
+    <script>
+        // 初始化markdown页面
+        var mdEditor;
+        $(function() {
+            mdEditor = editormd("blog-content", {
+                width: "100%",
+                height: 800,
+                syncScrolling: "single",
+                emoji: true,
+                path: "../static/lib/editmd/lib/"
+            });
+        });
+
+        $('.ui.dropdown').dropdown({
+            on : 'hover'
+        });
+
+        $('.menu.toggle').click(function () {
+            $('.m-item').toggleClass('m-mobile-hide');
+        });
+
+        // 限制表单输入格式
+        $('.ui.form').form({
+            fields : {
+                'title' : {
+                    identifier: 'title',
+                    rules: [{
+                        type: 'empty', prompt : '标题：请输入博客标题'
+                    }]
+                },
+                'blog-content' : {
+                    identifier: 'blog-content',
+                    rules: [{
+                        type: 'empty',
+                        prompt : '正文：请输入博客正文'
+                    }]
+                },
+                'selectType' : {
+                    identifier: 'selectType',
+                    rules: [{
+                        type: 'empty',
+                        prompt : '分类：请选择博客分类'
+                    }]
+                },
+                'selectTag' : {
+                    identifier: 'selectTag',
+                    rules: [{
+                        type: 'empty',
+                        prompt : '标签：请选择博客标签'
+                    }]
+                }
+            }
+        });
+
+    </script>
+
+</body>
+</html>
