@@ -12,29 +12,36 @@
 
     <!-- 博客编写  -->
     <div class="m-padded-tb-huge">
-        <div class="ui container">
-            <form action="#" method="post" class="ui form">
+        <div class="ui container"  >
+            <form ID="blog-form" action="#" method="post" class="ui form" th:object="${blog}" th:action="*{id}==null ? @{/admin/blog/add} : @{/admin/blog/update(id=*{id})}">
+                <input type="hidden" name="id" th:value="*{id}">
+                <input type="hidden" name="isPublished" th:value="*{isPublished}">
                 <!-- 选择博客类型：原创、转载、翻译 -->
-                <div class="required field">
+                <div class="required field" style="z-index: 10 !important;">
                     <div class="ui left labeled input">
                         <div class="ui selection compact dropdown label">  <!--compact适应文本宽度-->
-                            <input type="hidden" value="原创">
+                            <input type="hidden" name="flag" value="原创" th:value="*{flag}" >
                             <i class="dropdown icon"></i>
-                            <div class="text">原创</div>
+                            <div class="text" data-value="原创">原创</div>
                             <div class="menu">
                                 <div class="item" data-value="原创">原创</div>
                                 <div class="item" data-value="转载">转载</div>
                                 <div class="item" data-value="翻译">翻译</div>
                             </div>
                         </div>
-                        <input type="text" name="title" placeholder="标题">
+                        <input type="text" placeholder="标题" name="title" th:value="*{title}">
+                    </div>
+                </div>
+                <!-- 博客简介 -->
+                <div class="required field">
+                    <div id="md-description" style="z-index: 1 !important;">
+                        <textarea placeholder="请输入博客简介..." name="description" th:text="*{description}" maxlength="300"></textarea>
                     </div>
                 </div>
                 <!-- 博客内容 -->
                 <div class="required field">
-                    <div id="blog-content" style="z-index: 10 !important;">  <!--z-index设置叠放层次-->
-                        <textarea name="blog-content" placeholder="在这里输入博客正文..." style="display: none">
-                        [TOC]</textarea>
+                    <div id="blog-content" style="z-index: 9 !important;">  <!--z-index设置叠放层次-->
+                        <textarea placeholder="在这里输入博客正文..." name="content" th:text="*{content}" style="display: none">[TOC]</textarea>
                     </div>
                 </div>
                 <div class="two fields">
@@ -42,14 +49,13 @@
                     <div class="required field">
                         <div class="ui left labeled input">
                             <div class="ui fluid selection dropdown">
-                                <input type="hidden" name="selectType">
+                                <!-- type.id 会将id值赋给blog的type对象-->
+                                <input type="hidden" name="type.id" th:value="*{type} != null ? *{type.id} : *{typeId}">  <!--为啥加了个 : *{typeId}就行了？-->
                                 <i class="dropdown icon"></i>
-                                <div class=" text">分类</div>
+                                <div class="text">分类</div>
                                 <div class="menu">
-                                    <div class="item">数据结构与算法</div>
-                                    <div class="item">操作系统</div>
-                                    <div class="item">计算机网络</div>
-                                    <div class="item">计算机组成原理</div>
+                                    <div  th:each="type : ${typeList}" th:data-value="${type.id}" th:text="${type.name}"
+                                          class="item" data-value="1"></div>
                                 </div>
                             </div>
                         </div>
@@ -58,14 +64,12 @@
                     <div class="required field">
                         <div class="ui left labeled input">
                             <div class="ui fluid multiple search selection dropdown">
-                                <input type="hidden" name="selectTag">
+                                <input type="hidden" name="tagIds" th:value="*{tagIds}">
                                 <i class="dropdown icon"></i>
                                 <div class="text">标签</div>
                                 <div class="menu">
-                                    <div class="item">Java</div>
-                                    <div class="item">Python</div>
-                                    <div class="item">大数据</div>
-                                    <div class="item">分布式</div>
+                                    <div th:each="tag : ${tagList}" th:data-value="${tag.id}" th:text="${tag.name}"
+                                          class="item" data-value="1"></div>
                                 </div>
                             </div>
                         </div>
@@ -73,32 +77,32 @@
                 </div>
                 <!-- 首图引用地址 -->
                 <div class="field">
-                    <input type="text" name="firstPicture" placeholder="请输入博客封面引用地址">
+                    <input type="text" name="indexPicture" placeholder="请输入博客封面引用地址" th:value="*{indexPicture}">
                 </div>
                 <!-- 4个选项 -->
                 <div class="inline fields">
                     <div class="field">
                         <div class="ui checkbox">
-                            <input type="checkbox" id="recommend" name="recommend" class="hidden">
-                            <label for="recommend">推荐此博客</label>
+                            <input type="checkbox" id="isRecommend" name="isRecommend" class="hidden" th:checked="*{isRecommend}">
+                            <label for="isRecommend">推荐此博客</label>
                         </div>
                     </div>
                     <div class="field">
                         <div class="ui checkbox">
-                            <input type="checkbox" id="shareInfo" name="shareInfo" class="hidden">
-                            <label for="shareInfo">显示转载信息</label>
+                            <input type="checkbox" id="showCopyright" name="showCopyright" class="hidden" th:checked="*{showCopyright}">
+                            <label for="showCopyright">显示转载信息</label>
                         </div>
                     </div>
                     <div class="field">
                         <div class="ui checkbox">
-                            <input type="checkbox" id="appreciation" name="appreciation" class="hidden" checked="">
-                            <label for="appreciation">开启赞赏功能</label>
+                            <input type="checkbox" id="showAppreciation" name="showAppreciation" class="hidden" checked="" th:checked="*{showAppreciation}">
+                            <label for="showAppreciation">开启赞赏功能</label>
                         </div>
                     </div>
                     <div class="field">
                         <div class="ui checkbox">
-                            <input type="checkbox" id="comment" name="comment" class="hidden" checked="">
-                            <label for="comment">开启评论功能</label>
+                            <input type="checkbox" id="showComment" name="showComment" class="hidden" checked="" th:checked="*{showComment}">
+                            <label for="showComment">开启评论功能</label>
                         </div>
                     </div>
                 </div>
@@ -107,8 +111,8 @@
                 <!-- 按钮 -->
                 <div class="ui right aligned container">
                     <button type="button" class="ui button" onclick="window.history.go(-1)">返回</button>
-                    <button class="ui secondary button">保存</button>
-                    <button type="submit" class="ui teal button">发布</button>
+                    <button type="submit" id="save-btn" class="ui secondary button" >保存</button>
+                    <button type="submit" id="publish-btn" class="ui teal button" >发布</button>
                 </div>
             </form>
         </div>
@@ -131,16 +135,12 @@
                 height: 800,
                 syncScrolling: "single",
                 emoji: true,
-                path: "../static/lib/editmd/lib/"
+                path: "../../static/lib/editmd/lib/"
             });
         });
 
         $('.ui.dropdown').dropdown({
             on : 'hover'
-        });
-
-        $('.menu.toggle').click(function () {
-            $('.m-item').toggleClass('m-mobile-hide');
         });
 
         // 限制表单输入格式
@@ -174,6 +174,17 @@
                     }]
                 }
             }
+        });
+
+
+        $('#save-btn').click(function () {     //点击保存，修改发布状态为false
+            $('[name="isPublished"]').val(false);
+            $('#blog-form').submit();
+        });
+
+        $('#publish-btn').click(function () {   //点击发布，修改发布状态为true
+            $('[name="isPublished"]').val(true);
+            $('#blog-form').submit();
         });
 
     </script>

@@ -16,20 +16,35 @@
     <!-- 编辑博客分类  -->
     <div class="m-padded-tb-huge">
         <div class="ui container">
-            <h2>分类编辑</h2>
-            <form action="#" method="post" class="ui form">
+            <!-- 三目运算符 若id为空，是新增操作，否则是编辑操作 -->
+            <!-- 将控制层获取的参数传递到此，然后判断是编辑操作还是新增操作，根据不同类型往不同的路径提交 -->
+            <form method="post" class="ui form" th:object="${type}" th:action="*{id}==null ? @{/admin/type/add} : @{/admin/type/update(id=*{id})} ">
                 <!-- 博客分类输入框 -->
-                <div class="field">
-                    <input type="text" name="name" placeholder="请输入分类名称...">
+                <input type="hidden" name="id" th:value="*{id}">    <!-- id -->
+                <div class="required field">
+                    <input type="text" name="name" th:value="*{name}" placeholder="请输入分类名称...">   <!-- name -->
                 </div>
 
                 <!-- 显示error提示信息：它会自己找提示信息 -->
                 <div class="ui error message"></div>
+
+                <!-- 错误信息提示，怎么设置重新提交后自动关闭？ -->
+                <div class="ui negative message" th:unless="${#strings.isEmpty(message)}">
+                    <i class="close icon"></i>
+                    <div class="header" >
+                        提示：
+                    </div>
+                    <p th:text="${message}">未知错误</p>
+                </div>
+
                 <!-- 按钮 -->
                 <div class="ui right aligned container">
                     <button type="button" class="ui button" onclick="window.history.go(-1)">返回</button>
-                    <button type="submit" class="ui teal button">保存</button>
+                    <button type="submit" class="ui teal submit button">保存</button>
                 </div>
+                <br>
+
+
             </form>
         </div>
     </div>
@@ -66,6 +81,16 @@
 
             }
         });
+
+        $('.message .close')
+            .on('click', function() {
+                $(this)
+                    .closest('.message')
+                    .transition('fade')
+
+                ;
+            })
+        ;
 
     </script>
 

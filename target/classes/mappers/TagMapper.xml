@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.blog.dao.TagMapper">
+
+    <!-- 添加分类 -->
+    <insert id="addTag" parameterType="com.ht.blog.pojo.Tag">
+        INSERT INTO t_tag(t_tag.id, t_tag.name) VALUES (#{id}, #{name})
+    </insert>
+
+    <!-- 删除一个标签 -->
+    <delete id="deleteTag" parameterType="Long">
+        DELETE FROM `t_tag` WHERE `id` = #{id}
+    </delete>
+
+    <!-- 修改一个标签 -->
+    <update id="updateTag" parameterType="com.ht.blog.pojo.Tag">
+        UPDATE `t_tag`
+        SET `name` = #{name}
+        WHERE `id` = #{id}
+    </update>
+
+    <!-- 查看所有标签 -->
+    <select id="listTag" resultType="com.ht.blog.pojo.Tag">
+        SELECT `id`,`name` FROM `t_tag`
+    </select>
+
+    <!-- 根据名称查询标签 -->
+    <select id="getTagByName" parameterType="String" resultType="com.ht.blog.pojo.Tag">
+        SELECT `id`,`name`
+        FROM `t_tag`
+        WHERE `name` = #{name}
+    </select>
+
+    <!-- 根据id查询标签 -->
+    <select id="getTagById" parameterType="Long" resultType="com.ht.blog.pojo.Tag">
+        SELECT `id`,`name`
+        FROM `t_tag`
+        WHERE `id` = #{id}
+    </select>
+
+
+
+
+
+</mapper>

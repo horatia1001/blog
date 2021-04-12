@@ -9,7 +9,12 @@ import java.util.HashMap;
 @Repository
 public interface UserMapper {
 
-    // TODO 检查后台管理用户登录：通过用户名和密码查找用户
+    /**
+     * 检查后台管理用户登录：通过用户名和密码查找用户
+     * @param username
+     * @param password
+     * @return
+     */
     User findByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
 
 }

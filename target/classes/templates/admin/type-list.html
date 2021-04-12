@@ -10,40 +10,51 @@
     <!-- 博客分类列表  -->
     <div class="m-padded-tb-huge">
         <div class="ui container">
+            <!-- 成功或失败提示信息 -->
+            <div class="ui floating message" th:unless="${#strings.isEmpty(message)}">
+                <i class="close icon"></i>
+                <div class="header">
+                    提示：
+                </div>
+                <p th:text="${message}"></p>
+            </div>
+
             <div class="ui stackable segment">
                 <!-- 分类信息 -->
                 <table class="ui teal table center aligned">
                     <thead>
                     <tr>
-                        <th></th>
+                        <!--<th></th>-->
                         <th>分类名称</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="type : ${typeList}">
-                        <td th:text="${type.id}">1</td>
+                        <!--<td th:text="${type.id}">1</td>-->
                         <td th:text="${type.name}">数据结构与算法</td>
                         <td>
-                            <a th:href="@{/admin/typeEdit}" class="ui mini teal basic button">编辑</a>
-                            <a th:href="@{/admin/typeDelete(id=${type.id})}" class="ui mini red basic button">删除</a>
+                            <a th:href="@{/admin/type/toUpdate(id=${type.id})}"
+                               class="ui mini teal basic button">编辑</a>
+                            <a th:href="@{/admin/type/delete(id=${type.id},pageNum=${pageInfo.pageNum})}"
+                               class="ui mini red basic button"
+                               onClick="return confirm('确定要删除此分类吗？');" >删除</a>
                         </td>
                     </tr>
                     </tbody>
-                    <!-- 上一页、下一页、新增案件 -->
+                    <!-- 上一页、下一页、新增按键 -->
                     <tfoot>
                         <tr >
                             <th colspan="6">
-                                <div class="ui mini pagination menu">
-                                    <a th:href="@{/admin/typeList(pageNum=${pageInfo.pageNum}-1)}" class="item">上一页</a>
-                                    <a th:href="@{/admin/typeList(pageNum=${pageInfo.pageNum}+1)}" class="item">下一页</a>
+                                <div class="ui mini pagination menu" th:if="${pageInfo.total}>1">
+                                    <a th:href="@{/admin/type/list(pageNum=${pageInfo.pageNum}-1)}" class="item">上一页</a>
+                                    <a th:href="@{/admin/type/list(pageNum=${pageInfo.pageNum}+1)}" class="item">下一页</a>
                                 </div>
-                                <a th:href="@{/admin/typeEdit}" class="ui right floated teal basic button">新增分类</a>
+                                <a th:href="@{/admin/type/toAdd}" class="ui right floated teal basic button">新增分类</a>
                             </th>
                         </tr>
                     </tfoot>
                 </table>
-
             </div>
         </div>
     </div>
@@ -56,6 +67,19 @@
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <script>
+        $('.message .close')
+            .on('click', function() {
+                $(this)
+                    .closest('.message')
+                    .transition('fade')
+                ;
+            })
+        ;
+
+        $('.ui.dropdown').dropdown();
+    </script>
+
 
 </body>
 </html>

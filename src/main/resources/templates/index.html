@@ -1,12 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
 <head th:replace="_fragments :: head(~{::title})">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">   <!--页面适配移动端大小-->
     <title>首页</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css" >
-    <link rel="stylesheet" href="../static/css/me.css" th:src="@{/css/me.css}">
-
 </head>
 <body>
     <!--  导航  ui:组件-->
@@ -25,47 +20,50 @@
                                 <h3 class="ui teal header">博客列表</h3>
                             </div>
                             <div class="right aligned column">
-                                共 <h3 class="ui orange header m-inline-block"> 15 </h3> 篇
+                                共 <h3 class="ui orange header m-inline-block" th:text="${pageInfo.total}"></h3> 篇
                             </div>
                         </div>
                     </div>
                     <!-- 列表 -->
-                    <div class="ui attached segment">
+                    <div class="ui attached segment" th:each="blog : ${pageInfo.list}">
                         <!-- 一篇博客 -->
-                        <div class="ui vertical m-padded-tb segment">
+                        <div class="ui vertical m-padded-tb segment" >
                             <div class="ui mobile reversed stackable grid">   <!--mobile reversed stackable组件自适应移动端-->
                                 <div class="eleven wide column">
-                                    <h3 class="ui header">这是一篇博客的标题</h3>
-                                    <p class="m-text">这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介</p>
+                                    <h3 class="ui header" name="title" th:text="${blog.title}">这是一篇博客的标题</h3>
+                                    <p class="m-text" name="description" th:text="${blog.description}">这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介</p>
                                     <!--  怎么让头像那一行置底？上面多写几行  -->
                                     <div class="ui grid">
                                         <div class="eleven wide column">
                                             <div class="ui mini horizontal link list">
                                                 <div class="item">
-                                                    <img src="../static/images/blogimg.png" alt="" class="ui avatar image"> <!--avatar image头像-->
-                                                    <div class="content"><a href="#" class="herder" >洪婷</a></div>
+                                                    <img th:src="@{${blog.user.avatar}}" class="ui avatar image"> <!--avatar image头像-->
+                                                    <div class="content" th:text="${blog.user.nickname}"><a class="herder" >洪婷</a></div>
+                                                </div>
+                                                <div class="item" >   <!-- 时间格式化 -->
+                                                    <i class="calendar icon"></i>
+                                                    <span th:text=" ${#dates.format(blog.updateTime,'yyyy-MM-dd')}"></span>
                                                 </div>
                                                 <div class="item">
-                                                    <i class="calendar icon"></i> 2021-3-20
-                                                </div>
-                                                <div class="item">
-                                                    <i class="eye icon"></i> 193
+                                                    <i class="eye icon" ></i>
+                                                    <span th:text=" ${blog.viewTimes}"></span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="right aligned five wide column">
-                                            <a href="#" target="_blank" class="ui teal basic label m-text-thin">程序人生</a>
+                                            <a href="#" class="ui teal basic label m-text-thin" th:text="${blog.type.name}">博客分类</a>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="five wide column ">
-                                    <a href="#" target="_blank" class="">
-                                        <img src="../static/images/blogimg.png" class="ui rounded image">
+                                    <a href="#" class="">
+                                        <img th:src="@{${blog.indexPicture}}" class="ui rounded image">
                                     </a>
                                 </div>
                             </div>
 
                         </div>
+                        <!--/*-->
                         <div class="ui vertical m-padded-tb segment">
                             <div class="ui mobile reversed stackable grid">
                                 <div class="eleven wide column">
@@ -168,15 +166,16 @@
                             </div>
 
                         </div>
+                        <!--*/-->
                     </div>
                     <!-- 底部 -->
                     <div class="ui attached segment">
                         <div class="ui middle aligned two column grid">
                             <div class="left aligned column">
-                                <a href="" class="ui mini teal basic button">上一页</a>
+                                <a th:href="@{/blog/index(pageNum=${pageInfo.pageNum}-1)}" class="ui mini teal basic button">上一页</a>
                             </div>
                             <div class="right aligned column">
-                                <a href="" class="ui mini teal basic button">下一页</a>
+                                <a th:href="@{/blog/index(pageNum=${pageInfo.pageNum}+1)}" class="ui mini teal basic button">下一页</a>
                             </div>
                         </div>
                     </div>
@@ -191,16 +190,15 @@
                                 <h3 class="ui teal header">分类</h3>
                             </div>
                             <div class="right aligned column">
-                                <a href="#" class="ui orange m-inline-block">查看更多 >></a>
+                                <a th:href="@{/blog/type}" class="ui orange m-inline-block">查看更多 >></a>
                             </div>
                         </div>
                     </div>
                     <div class="ui teal attached segment">
-                        <div class="ui fluid vertical menu"> <!--fluid填充满-->
-                            <a href="#" class="item">数据结构与算法<div class="ui teal left pointing label">18</div></a>
-                            <a href="#" class="item">操作系统<div class="ui teal left pointing label">12</div></a>
-                            <a href="#" class="item">计算机网络<div class="ui teal left pointing label">9</div></a>
-                            <a href="#" class="item">计算机组成原理<div class="ui teal left pointing label">32</div></a>
+                        <div class="ui fluid vertical menu" > <!--fluid填充满-->
+                            <a th:href="@{/blog/type/getBlog(id=${type.id})}" class="item" th:each="type : ${typeList}" th:text="${type.name}" >数据结构与算法
+                                <!--<div class="ui teal left pointing label" th:text="${#arrays.length(type.blogs)}" >18</div>-->
+                            </a>
                         </div>
                     </div>
                     <!-- 标签 -->
@@ -211,18 +209,15 @@
                                 <h3 class="ui teal header">标签</h3>
                             </div>
                             <div class="right aligned column">
-                                <a href="#" class="ui orange m-inline-block">查看更多 >></a>
+                                <a th:href="@{/blog/tag}" class="ui orange m-inline-block">查看更多 >></a>
                             </div>
                         </div>
                     </div>
                     <div class="ui teal attached segment">
-                        <a href="#" target="_blank" class="ui teal basic label m-margin-tb-tiny">Java <div class="detail">34</div></a>
-                        <a href="#" target="_blank" class="ui teal basic label m-margin-tb-tiny">Python<div class="detail">34</div></a>
-                        <a href="#" target="_blank" class="ui teal basic label m-margin-tb-tiny">红黑树<div class="detail">34</div></a>
-                        <a href="#" target="_blank" class="ui teal basic label m-margin-tb-tiny">链表<div class="detail">34</div></a>
-                        <a href="#" target="_blank" class="ui teal basic label m-margin-tb-tiny">大数据<div class="detail">34</div></a>
-                        <a href="#" target="_blank" class="ui teal basic label m-margin-tb-tiny">分布式<div class="detail">34</div></a>
-                        <a href="#" target="_blank" class="ui teal basic label m-margin-tb-tiny">后端开发<div class="detail">34</div></a>
+                        <a href="#" target="_blank" class="ui teal basic label m-margin-tb-tiny"
+                           th:each="tag : ${tagList}" th:text="${tag.name}">
+                            <div class="detail">34</div>
+                        </a>
                     </div>
                     <!-- 最新推荐 -->
                     <!-- 最新推荐的头部 -->

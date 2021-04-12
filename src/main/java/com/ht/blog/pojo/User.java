@@ -6,59 +6,24 @@ import java.util.List;
 
 public class User {
 
-    private Integer id;
+    private Long id;           // 用户id
+    private String nickname;   // 用户昵称
+    private String username;   // 用户名称
+    private String password;   // 用户密码
+    private String email;      // 邮件地址
+    private String userType;   // 用户类型，扩展功能可能会用到
+    private String avatar;     // 用户头像
+    private Date createTime;   // 用户创建时间
+    private Date updateTime;   // 用户修改时间
+    private List<Blog> blogs = new ArrayList<>();    // 一位用户发表多篇博客
 
-    /**
-     * 用户昵称
-     */
-    private String nickname;
+    public User(){};
 
-    /**
-     * 用户名称
-     */
-    private String username;
-
-    /**
-     * 用户密码
-     */
-    private String password;
-
-    /**
-     * 邮件地址
-     */
-    private String email;
-
-    /**
-     * 用户类型
-     * 若之后需要扩展功能可能会用到
-     */
-    private String userType;
-
-    /**
-     * 用户头像
-     */
-    private String avatar;
-
-    /**
-     * 用户创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 用户修改时间
-     */
-    private Date updateTime;
-
-    /**
-     * 一位用户发表多篇博客
-     */
-    private List<Blog> blogs = new ArrayList<>();
-
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

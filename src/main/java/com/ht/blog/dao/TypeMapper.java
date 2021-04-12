@@ -34,5 +34,29 @@ public interface TypeMapper {
      */
     List<Type> listType();
 
+    /**
+     * 根据名称查询分类
+     * @param name
+     * @return
+     */
+    Type getTypeByName(String name);
+
+    /**
+     * 根据id查询分类
+     * @param id
+     * @return
+     */
+    Type getTypeById(Long id);
+
+//   -----------------------
+
+    /**
+     * 前台查询所有分类
+     * @return
+     */
+    List<Type> listTypeFront();
+
+
+
 
 }

@@ -7,20 +7,11 @@ import java.util.List;
  * 博客分类类
  */
 public class Type {
-    /**
-     * 分类的id
-     */
-    private Long id;
 
-    /**
-     * 分类
-     */
-    private String name;
-
-    /**
-     * 分类Type和博客Blog是一对多的关系
-     */
-    private List<Blog> blogs = new ArrayList<>();
+    private Long id;        // 分类的id
+    private String name;    // 分类名称
+    private List<Blog> blogs = new ArrayList<>();   // 分类Type和博客Blog是一对多的关系
+//    private Integer blogCount = blogs.size();
 
     public Long getId() {
         return id;

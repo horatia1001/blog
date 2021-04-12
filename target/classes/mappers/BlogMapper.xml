@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.blog.dao.BlogMapper">
+
+    <!-- association 可以指定联合的JavaBean对象
+         property 指定哪个属性是联合的对象，是JavaBean中的属性值
+         javaType 指定这个联合属性对象的JavaBean类型 -->
+    <resultMap id="blogResultMap" type="com.ht.blog.pojo.Blog">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="indexPicture" column="index_picture"/>
+        <result property="flag" column="flag"/>
+        <result property="viewTimes" column="view_times"/>
+        <result property="showAppreciation" column="show_appreciation"/>
+        <result property="showCopyright" column="show_copyright"/>
+        <result property="showComment" column="show_comment"/>
+        <result property="isPublished" column="is_published"/>
+        <result property="isRecommend" column="is_recommend"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="typeId" column="type_id"/>
+        <result property="tagIds" column="tag_ids"/>
+        <result property="userId" column="user_id"/>
+        <result property="description" column="description"/>
+        <association property="type" javaType="com.ht.blog.pojo.Type">
+            <id property="id" column="id"></id>
+            <result property="name" column="name"></result>
+        </association>
+        <association property="user" javaType="com.ht.blog.pojo.User">
+            <id property="id" column="id"></id>
+            <result property="nickname" column="nickname"></result>
+            <result property="username" column="username"></result>
+            <result property="password" column="password"></result>
+            <result property="email" column="email"></result>
+            <result property="userType" column="user_type"></result>
+            <result property="avatar" column="avatar"></result>
+            <result property="createTime" column="create_time"></result>
+            <result property="updateTime" column="update_time"></result>
+        </association>
+    </resultMap>
+
+    <!-- ==================================== 以下为后台管理 ================================== -->
+    <!-- 添加博客 -->
+    <insert id="addBlog" parameterType="com.ht.blog.pojo.Blog">
+        INSERT INTO t_blog(t_blog.id, t_blog.title, t_blog.content, t_blog.index_picture, t_blog.flag, t_blog.view_times,
+                          t_blog.show_appreciation, t_blog.show_copyright, t_blog.show_comment, t_blog.is_published,
+                          t_blog.is_recommend, t_blog.create_time, t_blog.update_time, t_blog.type_id, t_blog.tag_ids,
+                          t_blog.user_id, t_blog.description)
+        VALUES (#{id}, #{title}, #{content},#{indexPicture}, #{flag}, #{viewTimes}, #{showAppreciation}, #{showCopyright},#{showComment},
+                #{isPublished}, #{isRecommend}, #{createTime}, #{updateTime}, #{typeId},#{tagIds},#{userId},#{description})
+    </insert>
+
+    <!-- 删除一个博客 -->
+    <delete id="deleteBlog" parameterType="Long">
+        DELETE FROM `t_blog` WHERE `id` = #{id}
+    </delete>
+
+    <!-- 修改一个博客的各种属性 -->
+    <update id="updateBlog" parameterType="com.ht.blog.pojo.Blog">
+        UPDATE `t_blog`
+        SET `title` = #{title}, `content` = #{content}, `index_picture` = #{indexPicture}, `flag` = #{flag},`view_times`=#{viewTimes},
+        `show_appreciation` = #{showAppreciation}, `show_copyright` = #{showCopyright}, `show_comment` = #{showComment},
+        `is_published` = #{isPublished}, `is_recommend` = #{isRecommend}, `create_time`=#{createTime}, `update_time`=#{updateTime},
+        `type_id` = #{typeId}, `tag_ids` = #{tagIds},  `description` = #{description}
+        WHERE `id` = #{id}
+    </update>
+
+    <!-- 查询博客，显示在blog-list中。这里应配置resultMap，而不是resultType-->
+    <select id="listBlogAdmin" resultMap="blogResultMap" >
+        SELECT b.id, b.title, b.is_recommend, b.is_published, b.update_time, b.type_id, t.id, t.name
+        FROM t_blog b, t_type t
+        WHERE b.type_id = t.id
+    </select>
+
+    <select id="searchBlogAdmin" parameterType="com.ht.blog.pojo.Blog" resultMap="blogResultMap" >
+        SELECT b.id, b.title, b.is_recommend, b.is_published, b.update_time, b.type_id, t.id tid, t.name
+        FROM t_blog b, t_type t
+        WHERE
+        <if test="1==1">
+            b.type_id = t.id
+        </if>
+        <if test="title != null">
+            AND b.title LIKE "%"#{title}"%"
+        </if>
+        <if test="typeId != null">
+            AND b.type_id = #{typeId}
+        </if>
+        <!--<if test="isRecommend != null">-->
+            <!--AND b.is_recommend = #{isRecommend}-->
+        <!--</if>-->
+    </select>
+
+    <!-- 根据id查询博客 -->
+    <select id="getBlogById" parameterType="Long" resultType="com.ht.blog.pojo.Blog">
+        SELECT t_blog.id, t_blog.title, t_blog.content, t_blog.index_picture, t_blog.flag, t_blog.view_times,
+               t_blog.show_appreciation, t_blog.show_copyright, t_blog.show_comment, t_blog.is_published,
+               t_blog.is_recommend, t_blog.create_time, t_blog.update_time, t_blog.type_id, t_blog.tag_ids,
+               t_blog.user_id, t_blog.description
+        FROM `t_blog`
+        WHERE `id` = #{id}
+    </select>
+
+    <!-- ==================================== 以下为前台展示 ================================== -->
+    <!-- 查询博客，显示在index.html 中。-->
+    <select id="listBlogIndex" resultMap="blogResultMap" >
+        SELECT b.id, b.title,b.index_picture, b.is_recommend, b.is_published, b.update_time, b.view_times, b.type_id, t.id, t.name,
+        u.nickname, u.avatar
+        FROM t_blog b, t_type t, t_user u
+        WHERE b.type_id = t.id
+    </select>
+
+
+    <!-- 根据分类id 查询博客列表 -->
+    <select id="getBlogByTypeId" parameterType="Long" resultMap="blogResultMap">
+        SELECT t.id tid, t.name, b.id bid, b.title,b.index_picture, b.description, b.update_time, b.view_times,b.type_id, u.nickname, u.avatar
+        FROM t_type t, t_blog b, t_user u
+        WHERE t.id = b.type_id
+        AND t.id = #{id}
+    </select>
+
+    <!--<select id="listBlog" resultType="com.ht.blog.pojo.Blog">-->
+    <!--SELECT `id`, `title`, `content`, `index_picture`, `flag`,`view_times`,`show_appreciation`, `show_copyright`,`show_comment`,-->
+    <!--`is_published`,`is_recommend`,`create_time`,`update_time`, `type_id`,`tag_ids`,`user_id`,`description`-->
+    <!--FROM `t_blog`-->
+    <!--</select>-->
+
+    <!-- 根据名称查询博客 -->
+    <!--<select id="getTagByName" parameterType="String" resultType="com.ht.blog.pojo.Tag">-->
+    <!--SELECT `id`,`name`-->
+    <!--FROM `t_tag`-->
+    <!--WHERE `name` = #{name}-->
+    <!--</select>-->
+
+</mapper>

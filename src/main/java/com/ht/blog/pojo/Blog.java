@@ -12,91 +12,32 @@ import java.util.List;
  * 博客类
  */
 public class Blog {
-    /**
-     * 博客id
-     */
-    private Long id;
 
-    /**
-     * 博客标题
-     */
-    private String title;
+    private Long id;         // 博客id
+    private String title;    // 博客标题
+    private String content;  // 博客内容
+    private String indexPicture;  // 首图url
+    private String flag;     // 标记：原创、转载、翻译
+    private Integer viewTimes;    // 博客的访问次数
 
-    /**
-     * 博客内容
-     */
-    private String content;
+    private boolean showAppreciation;    // 是否开启赞赏功能
+    private boolean showCopyright;       // 是否显示转载信息
+    private boolean showComment;         // 是否开启评论功能
+    private boolean isPublished;         // 博客是否已经发布，未发布的保存为草稿
+    private boolean isRecommend;         // 是否推荐
 
-    /**
-     * 首图url
-     */
-    private String indexPicture;
+    private Date createTime;      // 博客发布时间
+    private Date updateTime;      // 博客编辑时间
 
-    /**
-     * 标记：原创、转载、翻译
-     */
-    private String flag;
+    private Long typeId;          // 分类id
+    private String tagIds;        // 标签id
+    private Long userId;          // 发表此博客的用户（管理员）
+    private String description;   // 博客简介
 
-    /**
-     * 博客的访问次数
-     */
-    private Integer viewTimes;
-
-    /**
-     * 是否开启赞赏功能
-     */
-    private boolean showAppreciation;
-
-    /**
-     * 是否显示版权信息
-     */
-    private boolean showCopyright;
-
-    /**
-     * 是否开启评论功能
-     */
-    private boolean showComment;
-
-    /**
-     * 博客是否已经发布，未发布的保存为草稿
-     */
-    private boolean isPublished;
-
-    /**
-     * 是否推荐
-     */
-    private boolean isRecommend;
-
-    /**
-     * 博客发布时间
-     */
-    private Date createTime;
-
-    /**
-     * 博客编辑时间
-     * 若博客被再次编辑后发布，则会显示编辑时间
-     */
-    private Date updateTime;
-
-    /**
-     * 分类
-     */
-    private Type type;
-
-    /**
-     * 标签，是一个列表
-     */
-    private List<Tag> tags = new ArrayList<>();
-
-    /**
-     * 评论，是一个列表
-     */
-    private List<Comment> comments = new ArrayList<>();
-
-    /**
-     * 发表此博客的用户（管理员）
-     */
-    private User user;
+    private Type type;      // 博客分类
+    private User user;      // 发布博客的用户
+    private List<Tag> tags = new ArrayList<>();      // 标签列表
+    private List<Comment> comments = new ArrayList<>();   // 评论列表
 
     public Blog(){ }
 
@@ -172,21 +113,17 @@ public class Blog {
         this.showComment = showComment;
     }
 
-    public boolean isPublished() {
+    public boolean getIsPublished() {
         return isPublished;
     }
 
-    public void setPublished(boolean published) {
+    public void setIsPublished(boolean published) {
         isPublished = published;
     }
 
-    public boolean isRecommend() {
-        return isRecommend;
-    }
+    public boolean getIsRecommend() { return isRecommend; }
 
-    public void setRecommend(boolean recommend) {
-        isRecommend = recommend;
-    }
+    public void setIsRecommend(boolean recommend) { isRecommend = recommend; }
 
     public Date getCreateTime() {
         return createTime;
@@ -204,12 +141,36 @@ public class Blog {
         this.updateTime = updateTime;
     }
 
-    public Type getType() {
-        return type;
+    public Long getTypeId() {
+        return typeId;
     }
 
-    public void setType(Type type) {
-        this.type = type;
+    public void setTypeId(Long typeId) {
+        this.typeId = typeId;
+    }
+
+    public String getTagIds() {
+        return tagIds;
+    }
+
+    public void setTagIds(String tagIds) {
+        this.tagIds = tagIds;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public List<Tag> getTags() {
@@ -226,6 +187,14 @@ public class Blog {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 
     public User getUser() {
@@ -252,10 +221,10 @@ public class Blog {
                 ", isRecommend=" + isRecommend +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
-                ", type=" + type +
-                ", tags=" + tags +
-                ", comments=" + comments +
-                ", user=" + user +
+                ", typeId=" + typeId +
+                ", tagIds='" + tagIds + '\'' +
+                ", userId=" + userId +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

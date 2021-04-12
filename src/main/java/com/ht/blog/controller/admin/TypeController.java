@@ -6,12 +6,14 @@ import com.ht.blog.pojo.Type;
 import com.ht.blog.pojo.User;
 import com.ht.blog.service.TypeService;
 import com.ht.blog.service.UserService;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -23,15 +25,49 @@ public class TypeController {
     private TypeService typeService;
 
     /**
+     * 这里需要先跳转到编辑页面
+     * @param model
+     * @return
+     */
+    @GetMapping("/type/toAdd")
+    public String toAdd(Model model){
+        model.addAttribute("type", new Type());
+        return "admin/type-edit";
+    }
+
+    /**
+     * 这个实现需要再次回顾，因为一开始是不会的。
+     * @param model
+     * @param id
+     * @return
+     */
+    @GetMapping("/type/toUpdate")
+    public String toUpdate(Model model, @RequestParam Long id){
+        model.addAttribute("type", typeService.getTypeById(id));
+        return "admin/type-edit";
+    }
+
+    /**
      * 添加博客分类
      * @return
      */
     @PostMapping("/type/add")
-    public String addType(Type type){
-        // 校验输入
+    public String addType(Type type, Model model, RedirectAttributes attributes){
+        // TODO 输入数据校验
+        // 查看分类是否已经存在
+        if(typeService.getTypeByName(type.getName()) != null){
+            model.addAttribute("message","该分类已存在，请重新添加！");
+            return "admin/type-edit";
+        }
 
-        typeService.addType(type);
-        return "admin/type-edit";
+        // 添加分类
+        int count = typeService.addType(type);
+        if(count > 0) {
+            attributes.addFlashAttribute("message","添加成功");
+        }else {
+            attributes.addFlashAttribute("message","添加失败");
+        }
+        return "redirect:/admin/type/list";
     }
 
     /**
@@ -39,19 +75,38 @@ public class TypeController {
      * @param id
      */
     @GetMapping("/type/delete")
-    public String deleteType(@RequestParam Long id){
+    public String deleteType(@RequestParam Long id,
+                             @RequestParam int pageNum,
+                             RedirectAttributes attributes){
         typeService.deleteType(id);
-        return "redirect:typeList";
+        attributes.addAttribute("pageNum",pageNum);
+        attributes.addFlashAttribute("message","删除成功");
+        return "redirect:/admin/type/list";
     }
 
     /**
      * 编辑博客分类
      * @return
      */
-    @GetMapping("/type/update")
-    public String updateType(Type type){
-        typeService.updateType(type);
-        return "admin/type-edit";
+    @PostMapping("/type/update")
+    public String updateType(Type type,
+                             Model model,
+                             RedirectAttributes attributes){
+        // TODO 输入数据校验
+        // 查看分类是否存在，若存在且不重复，则修改
+        if(typeService.getTypeByName(type.getName()) != null){
+            model.addAttribute("message","该分类已存在，请重新编辑！");
+            return "admin/type-edit";
+        }
+
+        // 编辑分类
+        int count = typeService.updateType(type);
+        if(count > 0) {
+            attributes.addFlashAttribute("message","编辑成功！");
+        }else {
+            attributes.addFlashAttribute("message","编辑失败！");
+        }
+        return "redirect:/admin/type/list";
     }
 
 

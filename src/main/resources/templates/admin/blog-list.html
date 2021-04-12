@@ -6,86 +6,81 @@
 <body>
     <!--  导航  ui:组件-->
     <nav th:replace="admin/_fragments_admin :: menuone(1)"></nav>
-
     <!-- 二级导航 -->
     <div th:replace="admin/_fragments_admin :: menutwo(2)"></div>
 
     <!-- 中间博客管理列表   -->
     <div class="m-padded-tb-huge">
         <div class="ui container">
-            <form action="#" method="post" class="ui  segment form">
+            <form th:action="@{/admin/blog/search}" method="post" class="ui segment form">
                 <div class="inline fields">
+                    <!-- 输入文章标题 -->
                     <div class="field">
                         <input type="text" name="title" placeholder="文章标题">
                     </div>
+                    <!-- 下拉框选择分类 -->
                     <div class="field">
-                        <div class="ui selection dropdown">
-                            <input type="hidden" name="type">
+                        <div class="ui type selection dropdown">
+                            <input type="hidden" name="typeId" >
                             <i class="dropdown icon"></i>
                             <div class="default text">分类</div>
                             <div class="menu">
-                                <div class="item" data-value="1">数据结构与算法</div>
-                                <div class="item" data-value="2">操作系统</div>
-                                <div class="item" data-value="3">计算机网络</div>
-                                <div class="item" data-value="4">计算机组成原理</div>
+                                <div  th:each="type : ${typeList}" th:data-value="${type.id}" th:text="${type.name}"
+                                      class="item" data-value="1"></div>
                             </div>
                         </div>
                     </div>
+                    <!-- 是否推荐 -->
+                    <!--<div class="field">-->
+                        <!--<div class="ui checkbox">-->
+                            <!--<input type="checkbox" id="isRecommend" name="isRecommend">-->
+                            <!--<label for="isRecommend">推荐</label>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!-- 搜索按钮 -->
                     <div class="field">
-                        <div class="ui checkbox">
-                            <input type="checkbox" id="recommend" name="recommend">
-                            <label for="recommend">推荐</label>       <!--推荐按钮，可以打勾-->
-                        </div>
-                    </div>
-                    <div class="field">
-                        <button class="ui teal button">搜索</button>
+                        <button type="submit" class="ui teal button">搜索</button>
                     </div>
                 </div>
             </form>
 
             <div class="ui stackable segment">
                 <!-- 博客信息 -->
-                <table class="ui teal table">
+                <table class="ui teal center aligned table">
                     <thead>
                     <tr>
                         <th>标题</th>
-                        <th>类型</th>
+                        <th>分类</th>
                         <th>推荐</th>
+                        <th>状态</th>
                         <th>更新时间</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>如何学习编程</td>
-                        <td>学习日志</td>
-                        <td>是</td>
-                        <td>2017-10-09 21:08</td>
-                        <td>
-                            <a href="" class="ui mini teal basic button">修改</a>
-                            <a href="" class="ui mini red basic button">删除</a>
+                    <tr th:each="blog : ${pageInfo.list}">   <!-- 这里传进来的Blog是JavaBean对象 -->
+                        <td th:text="${blog.title}">博客标题</td>
+                        <td th:text="${blog.type.name}">博客分类</td>
+                        <td th:text="${blog.isRecommend}? '是':'否'"></td>
+                        <td th:text="${blog.isPublished}? '已发布':'草稿'"></td>
+                        <td th:text="${blog.updateTime}" >2017-10-09 21:08</td>
+                        <td >
+                            <a th:href="@{/admin/blog/toUpdate(id=${blog.id})}" class="ui mini teal basic button">编辑</a>
+                            <a th:href="@{/admin/blog/delete(id=${blog.id})}" class="ui mini red basic button"
+                               onClick="return confirm('确定要删除此博客吗？');" >删除</a>
                         </td>
                     </tr>
-                    <tr>
-                        <td>如何学习编程</td>
-                        <td>学习日志</td>
-                        <td>是</td>
-                        <td>2017-10-09 21:08</td>
-                        <td>
-                            <a href="" class="ui mini teal basic button">修改</a>
-                            <a href="" class="ui mini red basic button">删除</a>
-                        </td>
-                    </tr>
+
                     </tbody>
-                    <!-- 上一页、下一页、新增案件 -->
+                    <!-- 上一页、下一页、新增按键 -->
                     <tfoot>
                         <tr>
                             <th colspan="6">
                                 <div class="ui mini pagination menu">
-                                    <a href="" class="item">上一页</a>
-                                    <a href="" class="item">下一页</a>
+                                    <a th:href="@{/admin/blog/list(pageNum=${pageInfo.pageNum}-1)}" class="item">上一页</a>
+                                    <a th:href="@{/admin/blog/list(pageNum=${pageInfo.pageNum}+1)}" class="item">下一页</a>
                                 </div>
-                                <a href="" class="ui right floated teal basic button">新增</a>
+                                <a href="" th:href="@{/admin/blog/toAdd}" class="ui right floated teal basic button">新增</a>
                             </th>
                         </tr>
                     </tfoot>

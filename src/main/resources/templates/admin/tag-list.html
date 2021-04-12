@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en" >
+<head th:replace="admin/_fragments_admin :: head(~{::title})">
+    <title>标签列表</title>
+</head>
+<body>
+    <!--  导航  ui:组件-->
+    <nav th:replace="admin/_fragments_admin :: menuone(3)"></nav>
+
+    <!-- 博客标签列表  -->
+    <div class="m-padded-tb-huge">
+        <div class="ui container">
+            <!-- 成功或失败提示信息 -->
+            <div class="ui floating message" th:unless="${#strings.isEmpty(message)}">
+                <i class="close icon"></i>
+                <div class="header">
+                    提示：
+                </div>
+                <p th:text="${message}">提示信息</p>
+            </div>
+
+            <div class="ui stackable segment">
+                <!-- 标签 -->
+                <table class="ui teal table center aligned">
+                    <thead>
+                    <tr>
+                        <!--<th></th>-->
+                        <th>标签名称</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="tag : ${tagList}">
+                        <!--<td th:text="${tag.id}">1</td>-->
+                        <td th:text="${tag.name}">Python</td>
+                        <td>
+                            <a th:href="@{/admin/tag/toUpdate(id=${tag.id})}"
+                               class="ui mini teal basic button">编辑</a>
+                            <a th:href="@{/admin/tag/delete(id=${tag.id},pageNum=${pageInfo.pageNum})}"
+                               class="ui mini red basic button"
+                               onClick="return confirm('确定要删除此标签吗？');" >删除</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <!-- 上一页、下一页、新增按键 -->
+                    <tfoot>
+                        <tr >
+                            <th colspan="6">
+                                <div class="ui mini pagination menu" th:if="${pageInfo.total}>1">
+                                    <a th:href="@{/admin/tag/list(pageNum=${pageInfo.pageNum}-1)}" class="item">上一页</a>
+                                    <a th:href="@{/admin/tag/list(pageNum=${pageInfo.pageNum}+1)}" class="item">下一页</a>
+                                </div>
+                                <a th:href="@{/admin/tag/toAdd}" class="ui right floated teal basic button">新增标签</a>
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <br>
+    <br>
+    <!--  底部     -->
+    <footer th:replace="admin/_fragments_admin :: footer" ></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <script>
+        $('.ui.dropdown').dropdown();
+
+        $('.menu.toggle').click(function () {
+            $('.m-item').toggleClass('m-mobile-hide');
+        });
+
+        $('.message .close')
+            .on('click', function() {
+                $(this)
+                    .closest('.message')
+                    .transition('fade')
+                ;
+            });
+    </script>
+
+
+</body>
+</html>

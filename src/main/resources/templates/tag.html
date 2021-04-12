@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
+<head th:replace="_fragments :: head(~{::title})">
+    <title>标签页面</title>
+</head>
+<body>
+    <!--  导航  ui:组件-->
+    <nav th:replace="_fragments :: menu(3)"></nav>
+
+    <!--  中间  -->
+    <div class="m-padded-tb-huge">
+        <div class="ui container">   <!--用container来包裹元素，可以让屏幕自适应调整到适合大小-->
+            <div class="ui stackable grid">
+                <!-- 标签 -->
+                <!-- 头部 -->
+                <div class="ui top attached segment">
+                    <div class="ui middle aligned two column grid">
+                        <div class="column">
+                            <h3 class="ui teal header">标签</h3>
+                        </div>
+                        <div class="right aligned column">
+                            <!--共 <h3 class="ui orange header m-inline-block"> 8 </h3> 个-->
+                        </div>
+                    </div>
+                </div>
+                <!-- 所有标签 -->
+                <div class="ui attached segment m-padded-tb-small"> <!--th:classappend="${activeTypeId==tag.id} ? 'teal'"-->
+                    <a class="ui basic large label m-margin-tag-lr-small m-margin-tb"
+                       th:href="@{/blog/tag/getBlog(id=${tag.id})}" th:each="tag : ${tagList}" th:text="${tag.name}">
+                        Java
+                        <!--<div class="detail">34</div>-->
+                    </a>
+                </div>
+
+                <!-- 列表 -->
+                <div class="ui top attached teal segment">
+                    <!-- 一篇博客 -->
+                    <div class="ui vertical m-padded-tb segment" th:each="blog : ${pageInfo.list}">
+                        <div class="ui mobile reversed stackable grid">   <!--mobile reversed stackable组件自适应移动端-->
+                            <div class="eleven wide column">
+                                <h3 class="ui header" th:text="${blog.title}">这是一篇博客的标题</h3>
+                                <p class="m-text" th:text="${blog.description}">这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介</p>
+                                <div class="ui grid">
+                                    <div class="row">
+                                        <div class="eleven wide column">
+                                            <div class="ui mini horizontal link list">
+                                                <div class="item">
+                                                    <img th:src="@{${blog.user.avatar}}" class="ui avatar image"> <!--avatar image头像-->
+                                                    <div class="content" th:text="${blog.user.nickname}"><a href="#" class="herder" >洪婷</a></div>
+                                                </div>
+                                                <div class="item">
+                                                    <i class="calendar icon"></i>
+                                                    <span th:text=" ${#dates.format(blog.updateTime,'yyyy-MM-dd')}"></span>
+                                                </div>
+                                                <div class="item">
+                                                    <span th:text=" ${blog.viewTimes}"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="right aligned five wide column">
+                                            <a th:text="${blog.type.name}" class="ui teal basic label m-text-thin">程序人生</a>
+                                        </div>
+                                    </div>
+
+                                    <!-- 一篇文章的所有标签  -->
+                                    <div class="row m-margin-tag-lr ">
+                                            <a href="#" class="ui teal tag label m-margin-tag-lr m-margin-tb-tiny">Java</a>
+                                            <a href="#" class="ui teal tag label m-margin-tag-lr m-margin-tb-tiny">Java</a>
+                                            <a href="#" class="ui teal tag label m-margin-tag-lr m-margin-tb-tiny">大数据</a>
+                                            <a href="#" class="ui teal tag label m-margin-tag-lr m-margin-tb-tiny">大数据</a>
+                                            <a href="#" class="ui teal tag label m-margin-tag-lr m-margin-tb-tiny">大数据</a>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="five wide column ">
+                                <a href="#" target="_blank" class="">
+                                    <img th:src="@{${blog.indexPicture}}" class="ui rounded image">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- 底部 -->
+                <div class="ui attached segment">
+                    <div class="ui middle aligned two column grid">
+                        <div class="left aligned column">
+                            <a href="" class="ui mini teal basic button">上一页</a>
+                        </div>
+                        <div class="right aligned column">
+                            <a href="" class="ui mini teal basic button">下一页</a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+
+    <!--  底部     -->
+    <footer th:replace="_fragments :: footer" ></footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+
+    <script>
+        // 设置右上角按钮响应：显示菜单
+        $('.menu.toggle').click(function (){
+            $('.m-menu-item').toggleClass('m-mobile-hide');
+        });
+
+    </script>
+</body>
+</html>
