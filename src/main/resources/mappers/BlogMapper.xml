@@ -24,8 +24,8 @@
         <result property="userId" column="user_id"/>
         <result property="description" column="description"/>
         <association property="type" javaType="com.ht.blog.pojo.Type">
-            <id property="id" column="id"></id>
-            <result property="name" column="name"></result>
+            <id property="id" column="t1id"></id>
+            <result property="name" column="t1name"></result>
         </association>
         <association property="user" javaType="com.ht.blog.pojo.User">
             <id property="id" column="id"></id>
@@ -38,7 +38,11 @@
             <result property="createTime" column="create_time"></result>
             <result property="updateTime" column="update_time"></result>
         </association>
-        
+        <collection property="tags" ofType="com.ht.blog.pojo.Tag">
+            <id property="id" column="t2id"></id>
+            <result property="name" column="t2name"></result>
+        </collection>
+
     </resultMap>
 
     <!-- ==================================== 以下为后台管理 ================================== -->
@@ -87,6 +91,7 @@
         <if test="typeId != null">
             AND b.type_id = #{typeId}
         </if>
+        <!--是否推荐只能选是或否，默认为否，能不能2个都不选，默认不筛选这一项?-->
         <!--<if test="isRecommend != null">-->
             <!--AND b.is_recommend = #{isRecommend}-->
         <!--</if>-->
@@ -105,10 +110,15 @@
     <!-- ==================================== 以下为前台展示 ================================== -->
     <!-- 查询博客，显示在index.html 中。-->
     <select id="listBlogIndex" resultMap="blogResultMap" >
-        SELECT b.id, b.title,b.index_picture, b.is_recommend, b.is_published, b.update_time, b.view_times, b.type_id, t.id, t.name,
-        u.nickname, u.avatar
-        FROM t_blog b, t_type t, t_user u
-        WHERE b.type_id = t.id
+        SELECT  t1.id t1id, t1.name t1name,
+                t2.id t2id, t2.name t2name,
+                b.id bid, b.title, b.index_picture, b.description, b.update_time, b.view_times,b.type_id,
+                u.nickname, u.avatar,
+                bt.tag_id, bt.blog_id
+        FROM t_type t1, t_tag t2, t_blog b, t_user u, t_blog_tags bt
+        WHERE t1.id = b.type_id
+        AND b.id = bt.blog_id
+        AND t2.id = bt.tag_id
     </select>
 
     <!-- 根据分类id 查询博客列表 -->
@@ -120,13 +130,17 @@
     </select>
 
     <!-- 根据标签id 查询博客列表 -->
-
-
-    <!-- 根据名称查询博客 -->
-    <!--<select id="getTagByName" parameterType="String" resultType="com.ht.blog.pojo.Tag">-->
-    <!--SELECT `id`,`name`-->
-    <!--FROM `t_tag`-->
-    <!--WHERE `name` = #{name}-->
-    <!--</select>-->
+    <select id="getBlogByTagId" parameterType="Long" resultMap="blogResultMap">
+        SELECT  t1.id t1id, t1.name t1name,
+                t2.id t2id, t2.name t2name,
+                b.id bid, b.title, b.index_picture, b.description, b.update_time, b.view_times,b.type_id,
+                u.nickname, u.avatar,
+                bt.tag_id, bt.blog_id
+        FROM t_type t1, t_tag t2, t_blog b, t_user u, t_blog_tags bt
+        WHERE t1.id = b.type_id
+        AND b.id = bt.blog_id
+        AND t2.id = bt.tag_id
+        AND t2.id = #{id}
+    </select>
 
 </mapper>
