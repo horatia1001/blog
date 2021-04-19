@@ -7,57 +7,26 @@ import java.util.List;
 
 public class Comment {
 
-    /**
-     * 评论id
-     */
-    private Integer id;
+    private Long id;                // 评论id
+    private String nickname;        // 发表评论用户的昵称
+    private String email;           // 发表评论用户的邮箱
+    private String avatar;          // 发表评论用户的头像
+    private String content;         // 发表的评论内容
+    private Date createTime;        // 发表评论的时间
+    private Blog blog;              // 评论对应的那篇博客
+    private Comment parentComment;  // 一条评论可以回复一条评论
+    private Long blogId;            // 评论对应的博客id
+    private Long parentCommentId;   // 父评论id
+    private List<Comment> replyComments = new ArrayList<>();     // 一条评论对应的回复集合，可以有>=0条回复
 
-    /**
-     * 发表评论用户的昵称
-     */
-    private String nickname;
-
-    /**
-     * 发表评论用户的邮箱
-     */
-    private String email;
-
-    /**
-     * 发表评论用户的头像
-     */
-    private String avatar;
-
-    /**
-     * 发表的评论内容
-     */
-    private String content;
-
-    /**
-     * 发表评论的时间
-     */
-    private Date createTime;
-
-    /**
-     * 评论对应的那篇博客
-     */
-    private Blog blog;
-
-    /**
-     * 一条评论可以有 >=0 条回复
-     */
-    private List<Comment> replyComments = new ArrayList<>();
-
-    /**
-     * 一条评论可以回复一条评论
-     */
-    private Comment parentComment;
+    private String parentCommentNickname;
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -123,6 +92,29 @@ public class Comment {
 
     public void setParentComment(Comment parentComment) {
         this.parentComment = parentComment;
+    }
+
+    public Long getBlogId() {
+        return blogId;
+    }
+
+    public void setBlogId(Long blogId) {
+        this.blogId = blogId;
+    }
+
+    public Long getParentCommentId() {
+        return parentCommentId;
+    }
+
+    public void setParentCommentId(Long parentCommentId) {
+        this.parentCommentId = parentCommentId;
+    }
+
+    public String getParentCommentNickname() {
+        return parentCommentNickname;
+    }
+    public void setParentCommentNickname(String parentCommentNickname) {
+        this.parentCommentNickname = parentCommentNickname;
     }
 
     @Override

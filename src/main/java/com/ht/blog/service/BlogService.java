@@ -3,6 +3,7 @@ package com.ht.blog.service;
 import com.ht.blog.pojo.Blog;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BlogService {
     /**
@@ -46,10 +47,16 @@ public interface BlogService {
 
     //----------------------------------------
     /**
-     * 前台博客列表
+     * 首页博客列表展示
      * @return
      */
     List<Blog> listBlogIndex();
+
+    /**
+     * 首页搜索博客展示
+     * @return
+     */
+    List<Blog> searchBlogFront(String keyWord);
 
     /**
      * 分类页面显示博客
@@ -57,4 +64,25 @@ public interface BlogService {
      * @return
      */
     List<Blog> getBlogByTypeId(Long id);
+
+    /**
+     * 标签页面显示博客
+     * @param id
+     * @return
+     */
+    List<Blog> getBlogByTagId(Long id);
+
+    /**
+     * 根据年份查询博客
+     * @param year
+     * @return
+     */
+    Map<String,List<Blog>> getBlogByYear(String year);
+
+    /**
+     * 根据博客id查询博客详情
+     * @param id
+     * @return
+     */
+    Blog getBlogDetailById(Long id);
 }

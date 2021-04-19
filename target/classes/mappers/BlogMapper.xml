@@ -5,8 +5,9 @@
     <!-- association 可以指定联合的JavaBean对象
          property 指定哪个属性是联合的对象，是JavaBean中的属性值
          javaType 指定这个联合属性对象的JavaBean类型 -->
+    <!-- blog查询结果的映射：与type、tag、user表进行关联 -->
     <resultMap id="blogResultMap" type="com.ht.blog.pojo.Blog">
-        <id property="id" column="id"/>
+        <id property="id" column="bid"/>
         <result property="title" column="title"/>
         <result property="content" column="content"/>
         <result property="indexPicture" column="index_picture"/>
@@ -24,11 +25,11 @@
         <result property="userId" column="user_id"/>
         <result property="description" column="description"/>
         <association property="type" javaType="com.ht.blog.pojo.Type">
-            <id property="id" column="id"></id>
-            <result property="name" column="name"></result>
+            <id property="id" column="t1id"></id>
+            <result property="name" column="t1name"></result>
         </association>
         <association property="user" javaType="com.ht.blog.pojo.User">
-            <id property="id" column="id"></id>
+            <id property="id" column="uid"></id>
             <result property="nickname" column="nickname"></result>
             <result property="username" column="username"></result>
             <result property="password" column="password"></result>
@@ -38,9 +39,14 @@
             <result property="createTime" column="create_time"></result>
             <result property="updateTime" column="update_time"></result>
         </association>
+        <collection property="tags" ofType="com.ht.blog.pojo.Tag">
+            <id property="id" column="t2id"></id>
+            <result property="name" column="t2name"></result>
+        </collection>
     </resultMap>
 
-    <!-- ==================================== 以下为后台管理 ================================== -->
+
+    <!-- ==================================== 以下为后台管理功能 ================================== -->
     <!-- 添加博客 -->
     <insert id="addBlog" parameterType="com.ht.blog.pojo.Blog">
         INSERT INTO t_blog(t_blog.id, t_blog.title, t_blog.content, t_blog.index_picture, t_blog.flag, t_blog.view_times,
@@ -86,8 +92,9 @@
         <if test="typeId != null">
             AND b.type_id = #{typeId}
         </if>
+        <!--是否推荐只能选是或否，默认为否，能不能2个都不选，默认不筛选这一项?-->
         <!--<if test="isRecommend != null">-->
-            <!--AND b.is_recommend = #{isRecommend}-->
+        <!--AND b.is_recommend = #{isRecommend}-->
         <!--</if>-->
     </select>
 
@@ -101,35 +108,84 @@
         WHERE `id` = #{id}
     </select>
 
-    <!-- ==================================== 以下为前台展示 ================================== -->
-    <!-- 查询博客，显示在index.html 中。-->
+
+    <!-- ==================================== 以下为前台展示功能 ================================== -->
+    <!-- 查询博客列表，显示在index.html 中。-->
     <select id="listBlogIndex" resultMap="blogResultMap" >
-        SELECT b.id, b.title,b.index_picture, b.is_recommend, b.is_published, b.update_time, b.view_times, b.type_id, t.id, t.name,
-        u.nickname, u.avatar
-        FROM t_blog b, t_type t, t_user u
-        WHERE b.type_id = t.id
+        SELECT  t1.id t1id, t1.name t1name,
+                t2.id t2id, t2.name t2name,
+                b.id bid, b.title, b.index_picture, b.description, b.update_time, b.view_times,b.type_id,
+                u.nickname, u.avatar,
+                bt.tag_id, bt.blog_id
+        FROM t_type t1, t_tag t2, t_blog b, t_user u, t_blog_tags bt
+        WHERE t1.id = b.type_id
+        AND b.id = bt.blog_id
+        AND t2.id = bt.tag_id
     </select>
 
+    <!-- 根据关键词搜索博客 -->
+    <select id="searchBlogFront" resultMap="blogResultMap" parameterType="String">
+        SELECT  t1.id t1id, t1.name t1name,
+                b.id bid, b.title, b.content, b.index_picture, b.description, b.update_time, b.view_times,b.type_id,
+                u.nickname, u.avatar
+        FROM t_type t1, t_blog b, t_user u, t_blog_tags bt
+        WHERE t1.id = b.type_id
+        AND (b.title LIKE "%"#{keyWord}"%"  OR  b.content LIKE "%"#{keyWord}"%")
+        ORDER BY b.update_time DESC
+    </select>
 
     <!-- 根据分类id 查询博客列表 -->
     <select id="getBlogByTypeId" parameterType="Long" resultMap="blogResultMap">
-        SELECT t.id tid, t.name, b.id bid, b.title,b.index_picture, b.description, b.update_time, b.view_times,b.type_id, u.nickname, u.avatar
+        SELECT t.id tid, t.name t1name,
+               b.id bid, b.title,b.index_picture, b.description, b.update_time, b.view_times,b.type_id,
+               u.nickname, u.avatar
         FROM t_type t, t_blog b, t_user u
         WHERE t.id = b.type_id
         AND t.id = #{id}
     </select>
 
-    <!--<select id="listBlog" resultType="com.ht.blog.pojo.Blog">-->
-    <!--SELECT `id`, `title`, `content`, `index_picture`, `flag`,`view_times`,`show_appreciation`, `show_copyright`,`show_comment`,-->
-    <!--`is_published`,`is_recommend`,`create_time`,`update_time`, `type_id`,`tag_ids`,`user_id`,`description`-->
-    <!--FROM `t_blog`-->
-    <!--</select>-->
+    <!-- 根据标签id 查询博客列表 -->
+    <select id="getBlogByTagId" parameterType="Long" resultMap="blogResultMap">
+        SELECT  t1.id t1id, t1.name t1name,
+                t2.id t2id, t2.name t2name,
+                b.id bid, b.title, b.index_picture, b.description, b.update_time, b.view_times,b.type_id,
+                u.nickname, u.avatar,
+                bt.tag_id, bt.blog_id
+        FROM t_type t1, t_tag t2, t_blog b, t_user u, t_blog_tags bt
+        WHERE t1.id = b.type_id
+        AND u.id = b.user_id
+        AND b.id = bt.blog_id
+        AND t2.id = bt.tag_id
+        AND t2.id = #{id}
+        ORDER BY b.id
+    </select>
 
-    <!-- 根据名称查询博客 -->
-    <!--<select id="getTagByName" parameterType="String" resultType="com.ht.blog.pojo.Tag">-->
-    <!--SELECT `id`,`name`-->
-    <!--FROM `t_tag`-->
-    <!--WHERE `name` = #{name}-->
-    <!--</select>-->
+    <!-- 查询所有年份，以更新时间为准，倒序排序 -->
+    <select id="getYears" resultType="String">
+        select DATE_FORMAT(b.update_time, '%Y') from t_blog b order by b.update_time desc
+    </select>
+
+    <!-- 归档:根据年份查询博客 -->
+    <select id="getBlogByYear" parameterType="String" resultType="com.ht.blog.pojo.Blog">
+        SELECT b.id bid, b.title, b.flag, b.update_time
+        FROM t_blog b
+        WHERE DATE_FORMAT(b.update_time, '%Y') = #{year}
+    </select>
+
+    <!-- 查询博客详情，显示在详情页中 -->
+    <select id="getBlogDetailById" parameterType="Long" resultMap="blogResultMap">
+        SELECT  t1.id t1id, t1.name t1name,
+                t2.id t2id, t2.name t2name,
+                b.id bid, b.title,b.content, b.flag, b.update_time, b.view_times, b.type_id, b.show_comment,
+                u.nickname, u.avatar,
+                bt.tag_id, bt.blog_id
+        FROM t_type t1, t_tag t2, t_blog b, t_user u, t_blog_tags bt
+        WHERE t1.id = b.type_id
+        AND u.id = b.user_id
+        AND b.id = bt.blog_id
+        AND t2.id = bt.tag_id
+        AND b.id = #{id}
+    </select>
+
 
 </mapper>

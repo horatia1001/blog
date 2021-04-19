@@ -3,6 +3,7 @@ package com.ht.blog.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ht.blog.pojo.Blog;
+import com.ht.blog.pojo.Tag;
 import com.ht.blog.pojo.Type;
 import com.ht.blog.service.BlogService;
 import com.ht.blog.service.TagService;
@@ -25,24 +26,23 @@ public class TagFrontController {
     @Autowired
     private BlogService blogService;
 
+    @GetMapping("/getBlog")
+    public String getBlogByType(Model model,
+                                @RequestParam(value = "pageNum", defaultValue = "1")  int pageNum,
+                                @RequestParam(value = "pageSize", defaultValue = "50") int pageSize,
+                                @RequestParam(value = "id") Long id){
+        PageHelper.startPage(pageNum, pageSize);
+        List<Blog> blogList = blogService.getBlogByTagId(id);
+        PageInfo<Blog> pageInfo = new PageInfo<>(blogList);
+        model.addAttribute("pageInfo", pageInfo);
 
-//    @GetMapping("/getBlog")
-//    public String getBlogByType(Model model,
-//                                @RequestParam(value = "pageNum", defaultValue = "1")  int pageNum,
-//                                @RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
-//                                @RequestParam(value = "id") Long id){
-//        PageHelper.startPage(pageNum, pageSize);
-//        List<Blog> blogList = blogService.getBlogByTypeId(id);
-//        PageInfo<Blog> pageInfo = new PageInfo<>(blogList);
-//        model.addAttribute("pageInfo", pageInfo);
-//
-//        tagService.listTag();
-//        model.addAttribute("typeList",typeList);
-//        model.addAttribute("activeTypeId", id);     // 为了选中分类突出显示
-//
-//        return "type";
-//
-//    }
+        List<Tag> tagList = tagService.listTag();
+        model.addAttribute("tagList",tagList);
+        model.addAttribute("activeTagId", id);     // 为了选中分类突出显示
+
+        return "tag";
+
+    }
 
 
 }

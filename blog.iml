@@ -105,6 +105,9 @@
     <orderEntry type="library" name="Maven: com.github.pagehelper:pagehelper-spring-boot-autoconfigure:1.2.5" level="project" />
     <orderEntry type="library" name="Maven: com.github.pagehelper:pagehelper:5.1.4" level="project" />
     <orderEntry type="library" name="Maven: com.github.jsqlparser:jsqlparser:1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.commonmark:commonmark:0.17.1" level="project" />
+    <orderEntry type="library" name="Maven: org.commonmark:commonmark-ext-gfm-tables:0.17.1" level="project" />
+    <orderEntry type="library" name="Maven: org.commonmark:commonmark-ext-heading-anchor:0.17.1" level="project" />
     <orderEntry type="library" name="Maven: org.aspectj:aspectjweaver:1.9.6" level="project" />
   </component>
 </module>

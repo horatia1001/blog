@@ -20,7 +20,7 @@
                                 <h3 class="ui teal header">博客列表</h3>
                             </div>
                             <div class="right aligned column">
-                                共 <h3 class="ui orange header m-inline-block" th:text="${pageInfo.total}"></h3> 篇
+                                <!--共 <h3 class="ui orange header m-inline-block" th:text="${pageInfo.total}"></h3> 篇-->
                             </div>
                         </div>
                     </div>
@@ -30,7 +30,9 @@
                         <div class="ui vertical m-padded-tb segment" >
                             <div class="ui mobile reversed stackable grid">   <!--mobile reversed stackable组件自适应移动端-->
                                 <div class="eleven wide column">
-                                    <h3 class="ui header" name="title" th:text="${blog.title}">这是一篇博客的标题</h3>
+                                    <h3 class="ui header" name="title" >
+                                        <a th:href="@{/blog/detail(id=${blog.id})}" th:text="${blog.title}">这是一篇博客的标题</a>
+                                    </h3>
                                     <p class="m-text" name="description" th:text="${blog.description}">这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介这是一篇博客的简介</p>
                                     <!--  怎么让头像那一行置底？上面多写几行  -->
                                     <div class="ui grid">
@@ -56,7 +58,7 @@
                                     </div>
                                 </div>
                                 <div class="five wide column ">
-                                    <a href="#" class="">
+                                    <a th:href="@{/blog/detail(id=${blog.id})}" class="">
                                         <img th:src="@{${blog.indexPicture}}" class="ui rounded image">
                                     </a>
                                 </div>

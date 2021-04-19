@@ -181,10 +181,10 @@
                 <div class="ui attached segment">
                     <div class="ui middle aligned two column grid">
                         <div class="left aligned column">
-                            <a href="" class="ui mini teal basic button">上一页</a>
+                            <a th:href="@{/blog/type(pageNum=${pageInfo.pageNum}-1)}" class="ui mini teal basic button">上一页</a>
                         </div>
                         <div class="right aligned column">
-                            <a href="" class="ui mini teal basic button">下一页</a>
+                            <a th:href="@{/blog/type(pageNum=${pageInfo.pageNum}+1)}" class="ui mini teal basic button">下一页</a>
                         </div>
                     </div>
                 </div>

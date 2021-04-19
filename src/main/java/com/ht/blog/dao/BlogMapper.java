@@ -26,6 +26,15 @@ public interface BlogMapper {
     // 前台展示
     List<Blog> listBlogIndex();
 
+    List<Blog> searchBlogFront(String keyWord);
+
     List<Blog> getBlogByTypeId(Long id);
 
+    List<Blog> getBlogByTagId(Long id);
+
+    List<String> getYears();
+
+    List<Blog> getBlogByYear(String year);
+
+    Blog getBlogDetailById(Long id);
 }

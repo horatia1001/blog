@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="../static/css/typo.css" th:href="@{/static/css/typo.css}">
     <link rel="stylesheet" href="../static/lib/prism/prism.css" th:href="@{/static/lib/prism/prism.css}">
     <link rel="stylesheet" href="../static/lib/tocbot/tocbot.css" th:href="@{/static/lib/tocbot/tocbot.css}">
-    <!-- 这里将th:src 改成th:href 就可以了，并且th:href后的路径采用绝对路径，resources是根路径-->
+    <!-- 这里link引用的资源报错404，我发现blog是根目录。将th:src 改成th:href 就可以了，并且th:href后的路径采用绝对路径，resources是根路径-->
 </head>
 <body>
     <!--  导航  ui:组件-->
@@ -23,9 +23,12 @@
                 <a href="#" th:href="@{/blog/archive}" class="m-menu-item item m-mobile-hide" th:classappend="${n==4} ? 'active'"><i class="clone icon"></i>归档</a>
                 <a href="#" th:href="@{/blog/aboutme}" class="m-menu-item item m-mobile-hide" th:classappend="${n==5} ? 'active'"><i class="info icon"></i>关于我</a>
                 <div class="right item m-mobile-hide">
-                    <div class="ui icon input ">                 <!--加上inverted和transparent搜索框变透明-->
-                        <input type="text" placeholder="搜索..."><i class="search link icon"></i>
-                    </div>
+                    <form name="search" method="post" th:action="@{/blog/search}" >
+                        <div class="ui icon input ">                 <!--加上inverted和transparent搜索框变透明-->
+                            <input name="keyWord" type="text" placeholder="搜索..." th:value="${keyWord}">
+                            <i class="search link icon" onclick="document.forms['search'].submit()"></i>
+                        </div>
+                    </form>
                 </div>
                 <!-- 设置按钮响应：显示菜单 menu toggle-->
                 <a href="#" class="ui menu toggle black icon button m-top-right m-mobile-show">

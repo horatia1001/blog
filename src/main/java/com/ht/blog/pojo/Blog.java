@@ -17,7 +17,7 @@ public class Blog {
     private String title;    // 博客标题
     private String content;  // 博客内容
     private String indexPicture;  // 首图url
-    private String flag;     // 标记：原创、转载、翻译
+    private String flag;          // 标记：原创、转载、翻译
     private Integer viewTimes;    // 博客的访问次数
 
     private boolean showAppreciation;    // 是否开启赞赏功能
@@ -36,7 +36,7 @@ public class Blog {
 
     private Type type;      // 博客分类
     private User user;      // 发布博客的用户
-    private List<Tag> tags = new ArrayList<>();      // 标签列表
+    private List<Tag> tags = new ArrayList<>();           // 标签列表
     private List<Comment> comments = new ArrayList<>();   // 评论列表
 
     public Blog(){ }

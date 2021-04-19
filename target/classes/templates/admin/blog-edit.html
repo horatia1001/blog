@@ -13,7 +13,7 @@
     <!-- 博客编写  -->
     <div class="m-padded-tb-huge">
         <div class="ui container"  >
-            <form ID="blog-form" action="#" method="post" class="ui form" th:object="${blog}" th:action="*{id}==null ? @{/admin/blog/add} : @{/admin/blog/update(id=*{id})}">
+            <form id="blog-form" action="#" method="post" class="ui form" th:object="${blog}" th:action="*{id}==null ? @{/admin/blog/add} : @{/admin/blog/update(id=*{id})}">
                 <input type="hidden" name="id" th:value="*{id}">
                 <input type="hidden" name="isPublished" th:value="*{isPublished}">
                 <!-- 选择博客类型：原创、转载、翻译 -->

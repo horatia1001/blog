@@ -7,20 +7,10 @@ import java.util.List;
  * 博客标签类
  */
 public class Tag {
-    /**
-     * 标签id
-     */
-    private Long id;
 
-    /**
-     * 标签名
-     */
-    private String name;
-
-    /**
-     * 标签Tag和博客Blog是一对多的关系
-     */
-    private List<Blog> blogs = new ArrayList<>();
+    private Long id;         // 标签id
+    private String name;     // 标签名称
+    private List<Blog> blogs = new ArrayList<>();   // 标签Tag和博客Blog是一对多的关系
 
     public Long getId() {
         return id;

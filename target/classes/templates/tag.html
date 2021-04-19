@@ -10,7 +10,7 @@
     <!--  中间  -->
     <div class="m-padded-tb-huge">
         <div class="ui container">   <!--用container来包裹元素，可以让屏幕自适应调整到适合大小-->
-            <div class="ui stackable grid">
+            <div class="ui stackable grid" >
                 <!-- 标签 -->
                 <!-- 头部 -->
                 <div class="ui top attached segment">
@@ -53,6 +53,7 @@
                                                     <span th:text=" ${#dates.format(blog.updateTime,'yyyy-MM-dd')}"></span>
                                                 </div>
                                                 <div class="item">
+                                                    <i class="eye icon"></i>
                                                     <span th:text=" ${blog.viewTimes}"></span>
                                                 </div>
                                             </div>
@@ -62,14 +63,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- 一篇文章的所有标签  -->
-                                    <div class="row m-margin-tag-lr ">
-                                            <a href="#" class="ui teal tag label m-margin-tag-lr m-margin-tb-tiny">Java</a>
-                                            <a href="#" class="ui teal tag label m-margin-tag-lr m-margin-tb-tiny">Java</a>
-                                            <a href="#" class="ui teal tag label m-margin-tag-lr m-margin-tb-tiny">大数据</a>
-                                            <a href="#" class="ui teal tag label m-margin-tag-lr m-margin-tb-tiny">大数据</a>
-                                            <a href="#" class="ui teal tag label m-margin-tag-lr m-margin-tb-tiny">大数据</a>
-                                    </div>
 
                                 </div>
                             </div>
@@ -78,6 +71,13 @@
                                     <img th:src="@{${blog.indexPicture}}" class="ui rounded image">
                                 </a>
                             </div>
+                            <!-- 一篇文章的所有标签  -->
+                            <div class="row m-margin-tag-lr"  >
+                                <div class="column">
+                                    <a href="#" class="ui teal tag label m-margin-tag-lr m-margin-tb-tiny"
+                                       th:each="tag : ${blog.tags}" th:text="${tag.name}">Java</a>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -85,17 +85,16 @@
 
                 </div>
                 <!-- 底部 -->
-                <div class="ui attached segment">
+                <div class="ui attached segment" >
                     <div class="ui middle aligned two column grid">
                         <div class="left aligned column">
-                            <a href="" class="ui mini teal basic button">上一页</a>
+                            <a th:href="@{/blog/tag/(pageNum=${pageInfo.hasPreviousPage}?${pageInfo.prePage}:1)}" class="ui mini teal basic button">上一页</a>
                         </div>
                         <div class="right aligned column">
-                            <a href="" class="ui mini teal basic button">下一页</a>
+                            <a th:href="@{/blog/tag/(pageNum=${pageInfo.hasNextPage}?${pageInfo.nextPage}:${pageInfo.pages})}" class="ui mini teal basic button">下一页</a>
                         </div>
                     </div>
                 </div>
-
 
             </div>
         </div>

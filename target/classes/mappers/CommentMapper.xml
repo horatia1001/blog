@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.blog.dao.CommentMapper">
+
+    <resultMap id="commentResultMap" type="com.ht.blog.pojo.Comment">
+        <id property="id" column="cid"></id>
+        <result property="nickname" column="nickname"></result>
+        <result property="email" column="email"></result>
+        <result property="avatar" column="avatar"></result>
+        <result property="content" column="content"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="blogId" column="blog_id"></result>
+        <result property="parentCommentId" column="parent_comment_id"></result>
+        <association property="blog" javaType="com.ht.blog.pojo.Blog">
+            <id property="id" column="bid"></id>
+        </association>
+        <association property="parentComment"  javaType="com.ht.blog.pojo.Comment">
+            <id property="id" column="pcid"></id>
+        </association>
+        <!--<collection property="replyComments" ofType="com.ht.blog.pojo.Comment">-->
+            <!--<id property="id" column="rids"></id>-->
+        <!--</collection>-->
+    </resultMap>
+
+    <!-- 查询一篇博客对应的所有评论 -->
+    <select id="listCommentByBlogId" parameterType="Long" resultMap="commentResultMap">
+        SELECT  `c`.id cid, `c`.nickname, `c`.email, `c`.avatar, `c`.content, `c`.create_time, `c`.blog_id,`c`.parent_comment_id,
+                `b`.id bid
+        FROM t_comment `c`, t_blog `b`
+        WHERE b.id = `c`.blog_id
+        AND b.id = #{id}
+    </select>
+
+    <!-- 添加评论 -->
+    <insert id="addComment" parameterType="com.ht.blog.pojo.Comment" >
+        INSERT INTO `t_comment`(`nickname`, `email`, `avatar`, `content`, `create_time`, `blog_id`, `parent_comment_id`)
+        VALUES (#{nickname}, #{email}, #{avatar}, #{content}, #{createTime}, #{blogId}, #{parentCommentId})
+    </insert>
+
+    <!-- 根据id查询评论 -->
+    <select id="getCommentById" parameterType="Long" resultMap="commentResultMap">
+        SELECT  `c`.id cid, `c`.nickname, `c`.email, `c`.avatar, `c`.content, `c`.create_time, `c`.blog_id,`c`.parent_comment_id
+        FROM t_comment `c`
+        WHERE `c`.id = #{id}
+    </select>
+
+
+    <!-- 一级二级评论功能实现 -->
+    <!--查询父级评论-->
+    <select id="findByParentIdNull" resultType="com.ht.blog.pojo.Comment">
+        select *
+        from t_comment `c`
+        where c.parent_comment_id = #{ParentId}
+        order by c.create_time desc
+    </select>
+
+    <!--查询一级回复-->
+    <select id="findByParentIdNotNull" resultType="com.ht.blog.pojo.Comment">
+        select *
+        from t_comment `c`
+        where c.parent_comment_id = #{id}
+        order by c.create_time desc
+    </select>
+
+    <!--查询二级以及所有子集回复-->
+    <select id="findByReplayId" resultType="com.ht.blog.pojo.Comment">
+        select *
+        from t_comment `c`
+        where c.parent_comment_id = #{childId}
+        order by c.create_time desc
+    </select>
+
+
+
+</mapper>
